@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "575838163733",
+    "firebase_url": "https://lelang-755d1.firebaseio.com",
+    "project_id": "lelang-755d1",
+    "storage_bucket": "lelang-755d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575838163733:android:c655bb0d3b9282bb1f0f1c",
+        "android_client_info": {
+          "package_name": "com.lucid.lelangonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575838163733-0d8seqptdaojt64q2jtj40vdcklol0qm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucid.lelangonline",
+            "certificate_hash": "85b519870c40e05b484d6adf939cdc82734d42db"
+          }
+        },
+        {
+          "client_id": "575838163733-b5fbebdo2kgo7mcnj9eqkkef3abato3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDegZW4oFX8Qgb105ZeFPuCN7dfnVRXdFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575838163733-b5fbebdo2kgo7mcnj9eqkkef3abato3d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

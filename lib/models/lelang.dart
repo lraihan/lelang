@@ -1,0 +1,3 @@
+class Lelang{
+  String nama;
+}
