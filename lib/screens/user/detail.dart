@@ -7,14 +7,15 @@ import 'package:lelangonline/screens/user/bidding.dart';
 class Detail extends StatelessWidget {
   final DocumentSnapshot snapshot;
   final User user;
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Detail(this.snapshot, this.user);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
+        color: Color(0xfff7f7f7),
         image: DecorationImage(
           image: AssetImage('assets/img/detail.png'),
           fit: BoxFit.cover,
@@ -31,6 +32,7 @@ class Detail extends StatelessWidget {
             ),
           ),
           Scaffold(
+            key: _scaffoldKey,
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               centerTitle: true,
@@ -178,27 +180,12 @@ class Detail extends StatelessWidget {
                                               return Bidding(snapshot, user);
                                             }));
                                           } else {
-                                            showDialog(
-                                              barrierDismissible: false,
-                                              context: context,
-                                              builder: (_) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                      'Lelang Telah Berakhir'),
-                                                  content: Text(
-                                                      'Sesi lelang telah berakhir'),
-                                                  actions: <Widget>[
-                                                    FlatButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  'Sesi lelang telah berakhir'),
+                                              duration: Duration(seconds: 2),
+                                            ));
                                           }
                                         },
                                         child: Text(

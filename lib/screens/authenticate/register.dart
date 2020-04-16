@@ -23,12 +23,12 @@ class _RegisterState extends State<Register> {
     return loading
         ? Loading()
         : Container(
-            color: Color(0xfff7f7f7),
             decoration: BoxDecoration(
+                color: Color(0xfff7f7f7),
                 image: DecorationImage(
-              image: AssetImage('assets/img/register.jpg'),
-              fit: BoxFit.cover,
-            )),
+                  image: AssetImage('assets/img/register.jpg'),
+                  fit: BoxFit.cover,
+                )),
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Align(

@@ -13,9 +13,12 @@ class UserHome extends StatelessWidget {
 
   UserHome(this.user);
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.blueGrey[50],
@@ -81,22 +84,11 @@ class UserHome extends StatelessWidget {
                         textColor: Colors.white,
                         child: Text('Lihat Detail'),
                         onPressed: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_) {
-                              return AlertDialog(
-                                title: Text('Coming Soon'),
-                                content: Text('Fitur dalam pengembangan'),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('OK'))
-                                ],
-                              );
-                            },
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text('Fitur Dalam Pengembangan'),
+                              duration: Duration(seconds: 2),
+                            )
                           );
                         },
                       ),

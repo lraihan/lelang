@@ -23,10 +23,11 @@ class _SignInState extends State<SignIn> {
         ? Loading()
         : Container(
             decoration: BoxDecoration(
+                color: Color(0xfff7f7f7),
                 image: DecorationImage(
-              image: AssetImage('assets/img/signin.jpg'),
-              fit: BoxFit.cover,
-            )),
+                  image: AssetImage('assets/img/signin.jpg'),
+                  fit: BoxFit.cover,
+                )),
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Align(

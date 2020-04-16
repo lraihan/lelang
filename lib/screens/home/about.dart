@@ -5,18 +5,20 @@ import 'package:lelangonline/services/auth.dart';
 class About extends StatelessWidget {
   final User user;
   About(this.user);
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
+          color: Color(0xfff7f7f7),
           image: DecorationImage(
-        image: AssetImage('assets/img/about.png'),
-        fit: BoxFit.cover,
-      )),
+            image: AssetImage('assets/img/about.png'),
+            fit: BoxFit.cover,
+          )),
       child: Scaffold(
+        key : _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           title: Text(
@@ -80,24 +82,11 @@ class About extends StatelessWidget {
                                     style: TextStyle(fontSize: 12),
                                   ),
                                   onPressed: () {
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (_) {
-                                        return AlertDialog(
-                                          title: Text('Coming Soon'),
-                                          content:
-                                              Text('Fitur dalam pengembangan'),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('OK'))
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                      content: Text('Fitur Dalam Pengembangan'),
+                                      duration: Duration(seconds: 2),
+                                    ));
                                   },
                                 ),
                               ),

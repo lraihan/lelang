@@ -14,17 +14,18 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> {
   final AppBarController appBarController = AppBarController();
-
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
+          color: Color(0xfff7f7f7),
           image: DecorationImage(
-        image: AssetImage('assets/img/explore.jpg'),
-        fit: BoxFit.cover,
-      )),
+            image: AssetImage('assets/img/explore.jpg'),
+            fit: BoxFit.cover,
+          )),
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         appBar: SearchAppBar(
           searchFontSize: 16,
@@ -32,7 +33,12 @@ class _ExploreState extends State<Explore> {
           appBarController: appBarController,
           searchHint: "Jam Tangan",
           mainTextColor: Colors.white,
-          onChange: (String value) {},
+          onChange: (String value) {
+            _scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('Fitur Dalam Pengembangan'),
+              duration: Duration(seconds: 2),
+            ));
+          },
           mainAppBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -49,23 +55,10 @@ class _ExploreState extends State<Explore> {
                   Icons.search,
                 ),
                 onPressed: () {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (_) {
-                      return AlertDialog(
-                        title: Text('Coming Soon'),
-                        content: Text('Fitur dalam pengembangan'),
-                        actions: <Widget>[
-                          FlatButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('OK'))
-                        ],
-                      );
-                    },
-                  );
+                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text('Fitur Dalam Pengembangan'),
+                    duration: Duration(seconds: 2),
+                  ));
                   appBarController.stream.add(true);
                 },
               ),
