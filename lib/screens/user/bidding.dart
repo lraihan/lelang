@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lelangonline/models/user.dart';
 
 class Bidding extends StatefulWidget {
   final DocumentSnapshot snapshot;
-  Bidding(this.snapshot);
+  final User user;
+  Bidding(this.snapshot, this.user);
 
   @override
   _BiddingState createState() => _BiddingState();
@@ -25,7 +27,7 @@ class _BiddingState extends State<Bidding> {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      color: Colors.blueGrey[50],
+      color: Color(0xfff7f7f7),
       child: Stack(
         children: <Widget>[
           Image.asset(
@@ -94,21 +96,167 @@ class _BiddingState extends State<Bidding> {
                         ),
                       ],
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: 30,
-                        child: FlatButton(
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          child: Text(
-                            'Tawar',
-                            style: TextStyle(fontSize: 12),
+                    StreamBuilder(
+                      stream: Firestore.instance
+                          .collection('riwayat')
+                          .where('username', isEqualTo: widget.user.username)
+                          .where('id_lelang',
+                              isEqualTo: widget.snapshot.documentID)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 30,
+                            child: FlatButton(
+                              color: Theme.of(context).primaryColor,
+                              textColor: Colors.white,
+                              child: Text(
+                                'Tawar',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                      title: Text('Konfirmasi'),
+                                      content: Text(
+                                          'Anda menawar ${NumberFormat.compactCurrency(locale: 'ID', symbol: 'IDR ', decimalDigits: 0).format(bid)} untuk ${widget.snapshot.data['nama']}?'),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                              if (!snapshot.hasData ||
+                                                  snapshot.data.documents
+                                                          .length ==
+                                                      0) {
+                                                await Firestore.instance
+                                                    .collection('riwayat')
+                                                    .document()
+                                                    .setData({
+                                                  'id_lelang': widget
+                                                      .snapshot.documentID,
+                                                  'penawaran': bid,
+                                                  'tanggal': DateTime.now(),
+                                                  'username':
+                                                      widget.user.username
+                                                }, merge: true).whenComplete(
+                                                        () async {
+                                                  await Firestore.instance
+                                                      .collection('lelang')
+                                                      .document(widget
+                                                          .snapshot.documentID)
+                                                      .setData({
+                                                    'harga_akhir': bid,
+                                                    'username':
+                                                        widget.user.username,
+                                                  }, merge: true).whenComplete(
+                                                          () {
+                                                    showDialog(
+                                                      barrierDismissible: false,
+                                                      context: context,
+                                                      builder: (_) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              'Penawaran Berhasil'),
+                                                          content: Text(
+                                                              'Anda menawar ${NumberFormat.compactCurrency(locale: 'ID', symbol: 'IDR ', decimalDigits: 0).format(bid)} untuk ${widget.snapshot.data['nama']}'),
+                                                          actions: <Widget>[
+                                                            FlatButton(
+                                                              child: Text('OK'),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .popUntil(
+                                                                        (route) =>
+                                                                            route.isFirst);
+                                                              },
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  });
+                                                });
+                                              } else {
+                                                await Firestore.instance
+                                                    .collection('riwayat')
+                                                    .document(snapshot
+                                                        .data
+                                                        .documents[0]
+                                                        .documentID)
+                                                    .setData({
+                                                  'id_lelang': widget
+                                                      .snapshot.documentID,
+                                                  'penawaran': bid,
+                                                  'tanggal': DateTime.now(),
+                                                  'username':
+                                                      widget.user.username
+                                                }).whenComplete(() async {
+                                                  await Firestore.instance
+                                                      .collection('lelang')
+                                                      .document(widget
+                                                          .snapshot.documentID)
+                                                      .setData({
+                                                    'harga_akhir': bid,
+                                                    'username':
+                                                        widget.user.username,
+                                                  }, merge: true).whenComplete(
+                                                          () {
+                                                    showDialog(
+                                                      barrierDismissible: false,
+                                                      context: context,
+                                                      builder: (_) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              'Penawaran Berhasil'),
+                                                          content: Text(
+                                                              'Anda menawar ${NumberFormat.compactCurrency(locale: 'ID', symbol: 'IDR ', decimalDigits: 0).format(bid)} untuk ${widget.snapshot.data['nama']}'),
+                                                          actions: <Widget>[
+                                                            FlatButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .popUntil(
+                                                                          (route) =>
+                                                                              route.isFirst);
+                                                                },
+                                                                child:
+                                                                    Text('OK'))
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  });
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              'Ya',
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                            )),
+                                        FlatButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Tidak',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor)))
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
-                          onPressed: () {},
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
                 ),

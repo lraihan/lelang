@@ -11,6 +11,7 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
           image: DecorationImage(
         image: AssetImage('assets/img/authbg.jpg'),

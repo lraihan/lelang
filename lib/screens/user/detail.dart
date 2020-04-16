@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lelangonline/models/user.dart';
 import 'package:lelangonline/screens/user/bidding.dart';
 
 class Detail extends StatelessWidget {
   final DocumentSnapshot snapshot;
+  final User user;
 
-  Detail(this.snapshot);
+  Detail(this.snapshot, this.user);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/img/detail.png'),
@@ -172,7 +175,7 @@ class Detail extends StatelessWidget {
                                               'Sedang Dilelang') {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(builder: (_) {
-                                              return Bidding(snapshot);
+                                              return Bidding(snapshot, user);
                                             }));
                                           } else {
                                             showDialog(
@@ -228,7 +231,7 @@ class Detail extends StatelessWidget {
 Widget _rank(BuildContext context, DocumentSnapshot snapshot) {
   return Container(
     width: double.infinity,
-    height: MediaQuery.of(context).size.height * 0.1,
+    height: MediaQuery.of(context).size.height * 0.05,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

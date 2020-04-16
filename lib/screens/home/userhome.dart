@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lelangonline/models/user.dart';
 import 'package:lelangonline/screens/home/about.dart';
+import 'package:lelangonline/screens/user/detail.dart';
 import 'package:lelangonline/screens/user/explore.dart';
-import 'package:lelangonline/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserHome extends StatelessWidget {
-  final AuthService _auth = AuthService();
   final User user;
   final riwayatController =
       PageController(initialPage: 0, viewportFraction: 0.85);
@@ -81,7 +80,25 @@ class UserHome extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         child: Text('Lihat Detail'),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) {
+                              return AlertDialog(
+                                title: Text('Coming Soon'),
+                                content: Text('Fitur dalam pengembangan'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'))
+                                ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -164,8 +181,8 @@ class UserHome extends StatelessWidget {
                                 controller: riwayatController,
                                 itemCount: snapshot.data.documents.length,
                                 itemBuilder: (context, index) {
-                                  return _riwayat(
-                                      context, snapshot.data.documents[index]);
+                                  return _riwayat(context,
+                                      snapshot.data.documents[index], user);
                                 },
                               ),
                             );
@@ -191,7 +208,7 @@ class UserHome extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) {
-                        return Explore();
+                        return Explore(user);
                       }));
                     },
                     child: Text(
@@ -213,7 +230,7 @@ class UserHome extends StatelessWidget {
   }
 }
 
-Widget _riwayat(BuildContext context, DocumentSnapshot document) {
+Widget _riwayat(BuildContext context, DocumentSnapshot document, User user) {
   return Container(
     height: MediaQuery.of(context).size.height * 0.5,
     child: StreamBuilder(
@@ -225,78 +242,85 @@ Widget _riwayat(BuildContext context, DocumentSnapshot document) {
         if (!snapshot.hasData) {
           return Container();
         } else {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(),
-                    child: Image.network(
-                      snapshot.data['photo'],
-                      fit: BoxFit.fitWidth,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return Detail(snapshot.data, user);
+              }));
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(),
+                      child: Image.network(
+                        snapshot.data['photo'],
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.symmetric(vertical: 2),
-                        child: Text(
-                          snapshot.data['nama'],
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(vertical: 2),
+                          child: Text(
+                            snapshot.data['nama'],
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Penawaranmu'),
-                            Text(
-                              NumberFormat.compactCurrency(
-                                      locale: 'ID',
-                                      symbol: 'IDR ',
-                                      decimalDigits: 0)
-                                  .format(document['penawaran']),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        SizedBox(height: 5),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('Penawaranmu'),
+                              Text(
+                                NumberFormat.compactCurrency(
+                                        locale: 'ID',
+                                        symbol: 'IDR ',
+                                        decimalDigits: 0)
+                                    .format(document['penawaran']),
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Status Lelang'),
-                            Text(
-                              snapshot.data['status'],
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ],
+                        SizedBox(height: 5),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('Status Lelang'),
+                              Text(
+                                snapshot.data['status'],
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }

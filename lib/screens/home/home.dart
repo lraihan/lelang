@@ -7,7 +7,7 @@ import 'package:lelangonline/models/user.dart';
 import 'package:lelangonline/screens/home/adminhome.dart';
 import 'package:lelangonline/screens/home/operatorhome.dart';
 import 'package:lelangonline/screens/home/userhome.dart';
-import 'package:lelangonline/services/auth.dart';
+import 'package:lelangonline/widgets/loading.dart';
 
 class Home extends StatefulWidget {
   final User user;
@@ -19,14 +19,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthService _auth = AuthService();
 
   User user = User(
     level: '',
   );
+  bool loading = false;
 
   @override
   void initState() {
+    loading = true;
     populate();
     super.initState();
   }
@@ -45,20 +46,32 @@ class _HomeState extends State<Home> {
           telp: onValue.documents[0]['telp'],
           level: onValue.documents[0]['level'],
         );
+        loading = false;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (user.level == 'Admin') {
-      return AdminHome(user);
-    } else if (user.level == 'Operator') {
-      return OperatorHome(user);
-    } else if (user.level == 'User') {
-      return UserHome(user);
+    if (loading) {
+      return Loading();
     } else {
-      return MyApp();
+      if (user.level == null) {
+        return MyApp();
+      } else {
+        if (user.level == 'Admin') {
+          return AdminHome(user);
+        } else if (user.level == 'Operator') {
+          return OperatorHome(user);
+        } else if (user.level == 'User') {
+          return UserHome(user);
+        } else {
+          return Container(
+            color: Colors.blueGrey[50],
+            child: Center(child: Text('Terjadi Kesalahan')),
+          );
+        }
+      }
     }
   }
 }

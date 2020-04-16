@@ -10,6 +10,7 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
           image: DecorationImage(
         image: AssetImage('assets/img/about.png'),
@@ -78,7 +79,26 @@ class About extends StatelessWidget {
                                     'Edit Profil',
                                     style: TextStyle(fontSize: 12),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (_) {
+                                        return AlertDialog(
+                                          title: Text('Coming Soon'),
+                                          content:
+                                              Text('Fitur dalam pengembangan'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('OK'))
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -135,9 +155,10 @@ class About extends StatelessWidget {
                           'Keluar',
                           style: TextStyle(fontSize: 12),
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           await _auth.signOut();
-                          Navigator.of(context).popUntil((route) => route.isFirst);
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
                         },
                       ),
                     ),

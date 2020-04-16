@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lelangonline/models/user.dart';
 import 'package:lelangonline/screens/user/detail.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
 
 class Explore extends StatefulWidget {
+  final User user;
+  Explore(this.user);
   @override
   _ExploreState createState() => _ExploreState();
 }
@@ -15,6 +18,7 @@ class _ExploreState extends State<Explore> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(0xfff7f7f7),
       decoration: BoxDecoration(
           image: DecorationImage(
         image: AssetImage('assets/img/explore.jpg'),
@@ -45,8 +49,23 @@ class _ExploreState extends State<Explore> {
                   Icons.search,
                 ),
                 onPressed: () {
-                  //This is where You change to SEARCH MODE. To hide, just
-                  //add FALSE as value on the stream
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (_) {
+                      return AlertDialog(
+                        title: Text('Coming Soon'),
+                        content: Text('Fitur dalam pengembangan'),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'))
+                        ],
+                      );
+                    },
+                  );
                   appBarController.stream.add(true);
                 },
               ),
@@ -106,7 +125,8 @@ class _ExploreState extends State<Explore> {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (_) {
                                     return Detail(
-                                        snapshot.data.documents[index]);
+                                        snapshot.data.documents[index],
+                                        widget.user);
                                   }));
                                 },
                                 child: _catalog(
