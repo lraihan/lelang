@@ -7,7 +7,7 @@ import 'package:lelangonline/screens/user/bidding.dart';
 class Detail extends StatelessWidget {
   final DocumentSnapshot snapshot;
   final User user;
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Detail(this.snapshot, this.user);
 

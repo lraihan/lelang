@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lelangonline/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lelangonline/services/auth.dart';
 import 'package:lelangonline/widgets/loading.dart';
 
 class PersonalData extends StatefulWidget {
@@ -13,10 +14,21 @@ class PersonalData extends StatefulWidget {
 
 class _PersonalDataState extends State<PersonalData> {
   final _formkey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
 
   String nama, kota, telp, error = '';
 
   bool loading = false;
+
+  @override
+  void initState() {
+    singout();
+    super.initState();
+  }
+
+  void singout() async {
+    await _auth.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {

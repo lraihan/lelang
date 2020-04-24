@@ -13,7 +13,7 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
 
-  String username, password, confirm, error = '';
+  String username, password, confirm, error;
   String usercheck;
 
   bool loading = false;
@@ -46,6 +46,10 @@ class _RegisterState extends State<Register> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           TextFormField(
+                            initialValue: username != null
+                                ? username =
+                                    username.replaceAll('@lelang.com', '')
+                                : username,
                             validator: (val) =>
                                 val.isEmpty ? 'Silahkan Pilih Username' : null,
                             decoration: InputDecoration(
@@ -107,10 +111,18 @@ class _RegisterState extends State<Register> {
                                   setState(() {
                                     loading = true;
                                   });
-                                  username = username + '@lelang.com';
-                                  dynamic result = await _auth
-                                      .registerUser(username, password)
-                                      .whenComplete(() {
+                                  username = username.replaceAll(
+                                          new RegExp(r"\s+\b|\b\s"), "") +
+                                      '@lelang.com';
+                                  print(username);
+                                  dynamic result = await _auth.registerUser(
+                                      username, password);
+                                  if (result == null) {
+                                    setState(() {
+                                      loading = false;
+                                      usercheck = 'Username telah dipakai';
+                                    });
+                                  } else {
                                     setState(() {
                                       loading = false;
                                     });
@@ -118,13 +130,6 @@ class _RegisterState extends State<Register> {
                                         MaterialPageRoute(builder: (_) {
                                       return PersonalData(username);
                                     }));
-                                  });
-
-                                  if (result == null) {
-                                    setState(() {
-                                      loading = false;
-                                      usercheck = 'Username telah dipakai';
-                                    });
                                   }
                                 }
                               },

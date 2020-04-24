@@ -5,7 +5,7 @@ import 'package:lelangonline/services/auth.dart';
 class About extends StatelessWidget {
   final User user;
   About(this.user);
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final AuthService _auth = AuthService();
   @override

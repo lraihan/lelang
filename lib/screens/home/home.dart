@@ -7,6 +7,7 @@ import 'package:lelangonline/models/user.dart';
 import 'package:lelangonline/screens/home/adminhome.dart';
 import 'package:lelangonline/screens/home/operatorhome.dart';
 import 'package:lelangonline/screens/home/userhome.dart';
+import 'package:lelangonline/services/auth.dart';
 import 'package:lelangonline/widgets/loading.dart';
 
 class Home extends StatefulWidget {
@@ -19,11 +20,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
 
   User user = User(
     level: '',
   );
-  bool loading = false;
+  bool loading = true;
 
   @override
   void initState() {
@@ -39,13 +41,18 @@ class _HomeState extends State<Home> {
         .getDocuments()
         .then((onValue) {
       setState(() {
-        user = new User(
-          username: onValue.documents[0]['username'],
-          kota: onValue.documents[0]['kota'],
-          nama: onValue.documents[0]['nama'],
-          telp: onValue.documents[0]['telp'],
-          level: onValue.documents[0]['level'],
-        );
+        if (onValue.documents.isEmpty) {
+          _auth.signOut();
+          user = null;
+        } else {
+          user = new User(
+            username: onValue.documents[0]['username'],
+            kota: onValue.documents[0]['kota'],
+            nama: onValue.documents[0]['nama'],
+            telp: onValue.documents[0]['telp'],
+            level: onValue.documents[0]['level'],
+          );
+        }
         loading = false;
       });
     });
@@ -56,7 +63,7 @@ class _HomeState extends State<Home> {
     if (loading) {
       return Loading();
     } else {
-      if (user.level == null) {
+      if (user == null) {
         return MyApp();
       } else {
         if (user.level == 'Admin') {
